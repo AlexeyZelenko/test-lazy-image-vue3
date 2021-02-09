@@ -1,26 +1,51 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+	<div
+			style="height: 500px"
+			v-for="(item, i) in items"
+			:key="i"
+	>
+
+		<LazyImageVue3 :picture="item.img"/>
+	</div>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import LazyImageVue3 from 'lazy-image-vue3'
 
 export default {
   name: 'App',
+	data: () => ({
+		items: [
+			{
+			img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg',
+			},
+      {
+        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+      },
+      {
+        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+      },
+      {
+        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+      },
+      {
+        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+      },
+      {
+        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+      },
+      {
+        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+      }
+		]
+  }),
   components: {
-    HelloWorld
+    LazyImageVue3
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
