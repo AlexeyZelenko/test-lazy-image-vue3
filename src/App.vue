@@ -1,25 +1,44 @@
 <template>
- <div class="drop-zone">
- <div
- v-for="item in getlist(1)"
- :key="item.id"
- class="drag-el"
- draggable="true"
- >
-	{{ item.title }}
- </div>
- </div>
-	<div class="drop-zone">
-		<div v-for="item in getlist(2)" :key="item.id" class="drag-el">
+	<div
+			class="drop-zone"
+			@drop="onDrop($event, 1)"
+			@dragenter.prevent
+			@dragover.prevent
+
+	>
+		<div
+				v-for="item in getList(1)"
+				:key="item.id"
+				@dragstart="startDrag($event, item)"
+				class="drag-el"
+				draggable="true"
+		>
 			{{ item.title }}
 		</div>
 	</div>
 
-<!--	Ленивая загрузка-->
 	<div
+			class="drop-zone"
+			@drop="onDrop($event, 2)"
+			@dragenter.prevent
+			@dragover.prevent
+	>
+		<div
+				v-for="item in getList(2)"
+				:key="item.id"
+				class="drag-el"
+				draggable="true"
+				@dragstart="startDrag($event, item)"
+		>
+			{{ item.title }}
+		</div>
+	</div>
+
+	<!--	Ленивая загрузка-->
+	<div
+			:key="i"
 			style="height: 500px"
 			v-for="(item, i) in items"
-			:key="i"
 	>
 
 		<LazyImageVue3 :picture="item.img"/>
@@ -28,59 +47,74 @@
 </template>
 
 <script>
-	import { ref } from 'vue'
+  import { ref } from 'vue'
   import LazyImageVue3 from 'lazy-image-vue3'
 
-export default {
-  name: 'App',
-	data: () => ({
-		items: [
-			{
-			img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg',
-			},
-      {
-        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
-      },
-      {
-        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
-      },
-      {
-        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
-      },
-      {
-        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
-      },
-      {
-        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
-      },
-      {
-        img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+  export default {
+    name: 'App',
+    data: () => ({
+      items: [
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg',
+        },
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+        },
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+        },
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+        },
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+        },
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+        },
+        {
+          img: 'https://cdn-images-1.medium.com/max/800/1*xjGrvQSXvj72W4zD6IWzfg.jpeg'
+        }
+      ]
+    }),
+    setup() {
+      const items = ref([
+        {id: 0, title: 'Item A', list: 1},
+        {id: 1, title: 'Item B', list: 1},
+        {id: 2, title: 'Item C', list: 2}
+      ])
+
+      const getList = (list) => {
+        return items.value.filter((item) => item.list == list)
       }
-		]
-  }),
-	setup () {
-    const items = ref([
-			{ id: 0, title: 'Items A', list: 1},
-			{ id: 1, title: 'Items B', list: 1},
-			{ id: 2, title: 'Items C', list: 2}
-		])
 
-		const getlist = (list) => {
-      return items.value.filter((item) => item.list = list)
-		}
+      const startDrag = (event, item) => {
+        console.log(item)
+        event.dataTransfer.dropEffect = 'move'
+        event.dataTransfer.effectAllowed = 'move'
+        event.dataTransfer.setData('itemID', item.id)
+      }
 
-		return {
-      getlist
-		}
-	},
-  components: {
-    LazyImageVue3
+      const onDrop = (event, list) => {
+        const itemID = event.dataTransfer.getData('itemID')
+        const item = items.value.find((item) => item.id == itemID)
+        item.list = list
+      }
+
+      return {
+        getList,
+        startDrag,
+        onDrop
+      }
+    },
+    components: {
+      LazyImageVue3
+    }
   }
-}
 </script>
 
 <style>
-	.drop-zone{
+	.drop-zone {
 		width: 50%;
 		margin: 50px auto;
 		background-color: #3e7c7c;
